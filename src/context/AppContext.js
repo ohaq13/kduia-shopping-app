@@ -24,7 +24,9 @@ export const AppReducer = (state, action) => {
                 return {
                     ...state,
                 };
-            } else {
+            } 
+           
+            else {
                 alert("Cannot increase the allocation! Out of funds");
                 return {
                     ...state
@@ -58,12 +60,26 @@ export const AppReducer = (state, action) => {
                 budget
             };
         case 'SET_BUDGET':
+            let prevState = state.budget;
             action.type = "DONE";
             state.budget = action.payload;
+            if (state.expenses) {
+                const totalExpenses = state.expenses.reduce((total, item) => {
+                return (total = total + item.cost);
+            }, 0);
+            if (state.budget<= totalExpenses){
+                alert("You Cannot reduce the budget value lowerthan spending");
+                state.budget =  prevState;
+
+            }
+            
+        }
+       
 
             return {
                 ...state,
             };
+        
         case 'CHG_CURRENCY':
             action.type = "DONE";
             state.currency = action.payload;
@@ -78,7 +94,7 @@ export const AppReducer = (state, action) => {
 
 // 1. Sets the initial state when the app loads
 const initialState = {
-    budget: 2000,
+    budget: 20000,
     expenses: [
         { id: "Marketing", name: 'Marketing', cost: 50 },
         { id: "Finance", name: 'Finance', cost: 300 },
